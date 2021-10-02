@@ -16,7 +16,7 @@ const Register: React.FC = () => {
     }, []);
 
     const redirect = (e:any) => {
-        window.location.href = `http://localhost:3001/get_uid?field=r&sid=${e.target.dataset.serial}&name=${e.target.dataset.name}`;
+        window.location.href = `http://localhost:3001/get_uid?status=r&sid=${e.target.dataset.serial}&name=${e.target.dataset.name}`;
     }
 
     return (
