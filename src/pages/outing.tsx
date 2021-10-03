@@ -36,7 +36,7 @@ const Outing: React.FC = () => {
     ]
 
     const redirect = (e: any) => {
-        window.location.href = `http://localhost:3001/get_uid?status=o&field=${e.target.id}&reason=none`;
+        window.location.href = `http://localhost:3001/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
     }
     const etcStatus = () => {
         setEtc(true);
@@ -44,17 +44,18 @@ const Outing: React.FC = () => {
     const etcChange = (e: any) => {
         if(e.value == 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
-            window.location.href = `http://location:3001/get_uid?status=o&field=etc&reason=${reason}`;
+            window.location.href = `http://localhost:3001/get_uid?status=o&field=etc&reason=${reason}&class=16`;
         } else {
-            window.location.href = `http://location:3001/get_uid?status=o&field=etc&reason=${e.label}`;
+            window.location.href = `http://localhost:3001/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
         }
     }
 
     return (
         <div>
-            <input type="radio" name="" id="water" value="물" onClick={redirect} />
-            <input type="radio" name="" id="bathroom" value="화장실" onClick={redirect} />
-            <input type="radio" name="" id="etc" value="기타" onClick={etcStatus} />
+            <input type="radio" name="wb" id="wb" value="물,화장실" onClick={redirect} />
+            <label htmlFor="wb">물, 화장실</label>
+            <input type="radio" name="etc" id="etc" value="기타" onClick={etcStatus} />
+            <label htmlFor="etc">기타</label>
             {etc ? (
                 <Select options={options} onChange={etcChange} />
             ) : (
