@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import Select from 'react-select';
 
 const Outing: React.FC = () => {
@@ -42,7 +42,7 @@ const Outing: React.FC = () => {
         setEtc(true);
     }
     const etcChange = (e: any) => {
-        if(e.value == 'etc') {
+        if(e.value === 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
             window.location.href = `http://localhost:3001/get_uid?status=o&field=etc&reason=${reason}&class=16`;
         } else {

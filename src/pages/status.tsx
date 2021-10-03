@@ -28,29 +28,32 @@ const Status: React.FC = () => {
 
     const { roomid } =  useParams<param>();
 
-    io.emit('class', roomid);   // 소켓 연결
-    io.on('userOut', (data: out) => {
-        setTotalOutMember([
-            ...totalOutMember,
-            {
-                id: totalOutMember.length,
-                ...data
+    useEffect(() => {
+        io.emit('class', roomid);   // 소켓 연결
+        io.on('userOut', (data: out) => {
+            setTotalOutMember([
+                ...totalOutMember,
+                {
+                    id: totalOutMember.length,
+                    ...data
+                }
+            ]);
+        });
+        io.on('userComeback', (data: comeback) => {
+            const idx = totalOutMember.findIndex((item) => {return item.serial === data.serial});
+            totalOutMember.splice(idx, 1);
+            console.log(totalOutMember);
+            setTotalOutMember([...totalOutMember]);
+            if(totalOutMember.length === 0) {
+                setOutMember([]);
+                setEtcMember([]);
             }
-        ]);
-    });
-    io.on('userComeback', (data: comeback) => {
-        const idx = totalOutMember.findIndex((item) => {return item.serial === data.serial});
-        totalOutMember.splice(idx, 1);
-        setTotalOutMember([...totalOutMember]);
-        if(totalOutMember.length == 0) {
-            setOutMember([]);
-            setEtcMember([]);
-        }
-    });
+        });
+    }, []);
 
     useEffect(() => {
         for(let i of totalOutMember) {
-            if(i.field == 'wb') {
+            if(i.field === 'wb') {
                 setOutMember([
                     ...outMember,
                     i
