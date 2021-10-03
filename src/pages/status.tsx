@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import io from '../api/socket';
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 type param = {
     roomid: string
@@ -29,6 +30,10 @@ const Status: React.FC = () => {
     const { roomid } =  useParams<param>();
 
     useEffect(() => {
+        axios.post('/api/outing', {classNum: roomid})
+        .then((data:any) => {
+            setTotalOutMember(data.data['users']);
+        })
         io.emit('class', roomid);   // 소켓 연결
         io.on('userOut', (data: out) => {
             setTotalOutMember([
