@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import io from '../api/socket';
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -11,9 +11,9 @@ interface out {
     classNum: string
     serial: string
     name: string
-    field: string
+    fields: string
     reason: string
-    status: string
+    status?: string
     id?: number
 }
 interface comeback {
@@ -29,45 +29,63 @@ const Status: React.FC = () => {
 
     const { roomid } =  useParams<param>();
 
+    const addOutUser = useCallback((data:out) => {
+        setTotalOutMember((prevList) => {
+            return [
+                ...prevList,
+                {
+                    id: prevList.length+1,
+                    ...data
+                }
+            ];
+        });
+    }, []);
+    const removeOutUser = useCallback((data:comeback) => {
+        console.log(totalOutMember);
+        const idx = totalOutMember.findIndex((item) => {return item.serial === data.serial});
+        totalOutMember.splice(idx, 1);
+        console.log(totalOutMember);
+        setTotalOutMember((prevList) => {
+            const pa = prevList;
+            const idx = pa.findIndex((item) => {return item.serial === data.serial});
+            pa.splice(idx, 1);
+            return [...pa];
+        });
+        if(totalOutMember.length === 0) {
+            setOutMember([]);
+            setEtcMember([]);
+        }
+    }, [totalOutMember]);
+
     useEffect(() => {
         axios.post('/api/outing', {classNum: roomid})
         .then((data:any) => {
-            setTotalOutMember(data.data['users']);
-        })
-        io.emit('class', roomid);   // 소켓 연결
-        io.on('userOut', (data: out) => {
-            setTotalOutMember([
-                ...totalOutMember,
-                {
-                    id: totalOutMember.length,
-                    ...data
-                }
-            ]);
-        });
-        io.on('userComeback', (data: comeback) => {
-            const idx = totalOutMember.findIndex((item) => {return item.serial === data.serial});
-            totalOutMember.splice(idx, 1);
-            console.log(totalOutMember);
-            setTotalOutMember([...totalOutMember]);
-            if(totalOutMember.length === 0) {
-                setOutMember([]);
-                setEtcMember([]);
+            for(let i=0; i<data.data['users'].length; i++) {
+                data.data['users'][i]['id'] = i;
             }
+            setTotalOutMember(data.data['users']);
         });
+        io.emit('class', roomid);   // 소켓 연결
+        io.on('userOut', addOutUser);
+        io.on('userComeback', removeOutUser);
     }, []);
 
     useEffect(() => {
         for(let i of totalOutMember) {
-            if(i.field === 'wb') {
-                setOutMember([
-                    ...outMember,
-                    i
-                ]);
+            if(i.fields === 'wb') {
+                setOutMember((prevList) => {
+                    return [
+                        ...prevList,
+                        i
+                    ];
+                });
             } else {
-                setEtcMember([
-                    ...etcMember,
-                    i
-                ]);
+                setEtcMember((prevList) => {
+                    return [
+                        ...prevList,
+                        i
+                    ];
+                });
             }
         }
     }, [totalOutMember]);
@@ -81,7 +99,7 @@ const Status: React.FC = () => {
             })}
             <h2>기타</h2>
             {etcMember.map((data) => {
-                return <span key={data.id}>{data.name} ({data.reason})</span>
+                return data.name ? <span key={data.id}>{data.name} ({data.reason})</span> : '';
             })}
         </div>
     );

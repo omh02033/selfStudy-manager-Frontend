@@ -1,8 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Select from 'react-select';
+import styled from "@emotion/styled";
+import Btn from "../components/Btn";
+import EtcBtn from "../components/EtcBtn";
+
+const Container = styled.div`
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const BtnContainer = styled.div`
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+`;
+
+const Frame = styled.iframe`
+    position: absolute;
+    visibility: hidden;
+    left: 0;
+    transform: translateX(-100%);
+`;
+
+const FieldBox = styled.div`
+    width: 75%;
+`;
+
+const EtcSelect = styled(Select)`
+    width: 75%;
+`;
 
 const Outing: React.FC = () => {
     const [etc, setEtc] = useState(false);
+    const [isSelect, setIsSelect] = useState(false);
+    
+    const FrameRef = useRef<HTMLIFrameElement>(null);
+
+    useEffect(() => {
+        window.addEventListener("message", (e) => {
+            console.log(e);
+        })
+    }, []);
 
     const options = [
         { value: '', label: '3D 애니메이션 창작실' },
@@ -33,35 +78,44 @@ const Outing: React.FC = () => {
         { value: '', label: '학습멘토실' },
         { value: '', label: '휴머노이드 연구소' },
         { value: 'etc', label: '기타' },
-    ]
+    ];
 
     const redirect = (e: any) => {
-        window.location.href = `http://localhost:3001/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
+        e.target.disabled = true;
+        FrameRef.current!.src = `http://localhost:3001/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
     }
-    const etcStatus = () => {
+    const etcStatus = (e: any) => {
+        e.target.disabled = true;
         setEtc(true);
     }
     const etcChange = (e: any) => {
         if(e.value === 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
-            window.location.href = `http://localhost:3001/get_uid?status=o&field=etc&reason=${reason}&class=16`;
+            FrameRef.current!.src = `http://localhost:3001/get_uid?status=o&field=etc&reason=${reason}&class=16`;
         } else {
-            window.location.href = `http://localhost:3001/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
+            FrameRef.current!.src = `http://localhost:3001/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
         }
+        setIsSelect(true);
+        setEtc(false);
+        setTimeout(() => {setIsSelect(false);}, 1000);
+    }
+    const comeback = (e: any) => {
+        e.target.disabled = true;
+        FrameRef.current!.src = "http://localhost:3001/get_uid?status=c&class=16";
     }
 
     return (
-        <div>
-            <input type="radio" name="wb" id="wb" value="물,화장실" onClick={redirect} />
-            <label htmlFor="wb">물, 화장실</label>
-            <input type="radio" name="etc" id="etc" value="기타" onClick={etcStatus} />
-            <label htmlFor="etc">기타</label>
-            {etc ? (
-                <Select options={options} onChange={etcChange} />
-            ) : (
-                <div></div>
-            )}
-        </div>
+        <Container>
+            <BtnContainer>
+                <FieldBox onClick={redirect}><Btn type="button" borderColor="#3BCD94" id="wb" msg="물,화장실" /></FieldBox>
+                <FieldBox onClick={etcStatus}><EtcBtn type="button" borderColor="#3BCD94" id="etc" isSelect={isSelect} msg="기타" /></FieldBox>
+                <FieldBox onClick={comeback}><Btn type="button" borderColor="#A5A5A5" id="comeback" msg="복귀" /></FieldBox>
+                {etc ? (
+                    <EtcSelect options={options} onChange={etcChange} />
+                ) : ('')}
+            </BtnContainer>
+            <Frame frameBorder="no" width="100" height="100" ref={FrameRef}></Frame>
+        </Container>
     );
 }
 

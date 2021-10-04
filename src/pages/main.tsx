@@ -1,5 +1,7 @@
-import React from "react";
+import React, {useRef, useEffect} from "react";
 import styled from "@emotion/styled";
+
+import Btn from "../components/Btn";
 
 const Conatiner = styled.div`
     width: 100vw;
@@ -12,34 +14,56 @@ const Conatiner = styled.div`
 const Button = styled.button`
     width: 80%;
     outline: none;
-    border: none;
-    font: 18px/65px Apple SD Gothic Neo M;
+    font: 20px/65px Apple SD Gothic Neo M;
     color: white;
     text-align: center;
     padding: 8px;
-    border-radius: 50px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: relative;
 `;
 const RegisterBtn = styled(Button)`
     background: linear-gradient(255deg, #2196f3, #ff4efd);
 `;
 const OutingBtn = styled(Button)`
-    background: linear-gradient(255deg, #0390fc, #03fc98);
-`;
-const ComebackBtn = styled(Button)`
     background: linear-gradient(255deg, #03fc35, #ad03fc);
 `;
 const StatusBtn = styled(Button)`
     background: linear-gradient(255deg, #c2fc03, #fc8003);
 `;
 
+const Frame = styled.iframe`
+    position: absolute;
+    visibility: hidden;
+    left: 0;
+    transform: translateX(-100%);
+    opacity: 0;
+`;
+
+const FieldBox = styled.div`
+    width: 75%;
+`;
 
 const Main: React.FC = () => {
+    const FrameRef = useRef<HTMLIFrameElement>(null);
+
+    useEffect(() => {
+        window.addEventListener("message", (e) => {
+            console.log(e);
+        })
+    }, []);
+
+    const comeback = () => {
+        FrameRef.current!.src = "http://localhost:3001/get_uid?status=c&class=16";
+    }
+
     return (
         <Conatiner>
             <RegisterBtn>회원가입</RegisterBtn>
-            <OutingBtn>외출</OutingBtn>
-            <ComebackBtn>복귀</ComebackBtn>
+            <OutingBtn onClick={() => {window.location.href="/outing"}}>외출</OutingBtn>
+            <FieldBox onClick={comeback}><Btn msg="복귀" borderColor="#A5A5A5" id="comeback" /></FieldBox>
             <StatusBtn>현황보기</StatusBtn>
+            <Frame ref={FrameRef}></Frame>
         </Conatiner>
     );
 }
