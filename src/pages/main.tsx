@@ -10,19 +10,15 @@ const Conatiner = styled.div`
     height: 100vh;
     display: flex;
     align-items: center;
+    justify-content: center;
+`;
+const Box = styled.div`
+    width: 100%;
+    height: 70%;
+    display: flex;
+    align-items: center;
     justify-content: space-around;
     flex-direction: column;
-`;
-const Button = styled.button`
-    width: 80%;
-    outline: none;
-    font: 20px/65px Apple SD Gothic Neo M;
-    color: white;
-    text-align: center;
-    padding: 8px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    position: relative;
 `;
 
 const Frame = styled.iframe`
@@ -52,10 +48,12 @@ const Main: React.FC = () => {
 
     return (
         <Conatiner>
-            <FieldBox onClick={() => {window.location.href="/register"}}><Btn msg="회원가입" borderColor="#18C2BA" /></FieldBox>
-            <FieldBox onClick={() => {window.location.href="/outing"}}><Btn msg="외출" borderColor="#3BCD94" /></FieldBox>
-            <FieldBox onClick={comeback}><Btn msg="복귀" borderColor="#A5A5A5" id="comeback" /></FieldBox>
-            <FieldBox onClick={() => {window.location.href="/status/16"}}><Btn msg="현황보기" borderColor="#A5A5A5" /></FieldBox>
+            <Box>
+                <FieldBox onClick={() => {window.location.href="/register"}}><Btn msg="회원가입" borderColor="#18C2BA" /></FieldBox>
+                <FieldBox onClick={() => {window.location.href="/outing"}}><Btn msg="외출" borderColor="#3BCD94" /></FieldBox>
+                <FieldBox onClick={comeback}><Btn msg="복귀" borderColor="#A5A5A5" id="comeback" /></FieldBox>
+                <FieldBox onClick={() => {window.location.href="/status/16"}}><Btn msg="현황보기" borderColor="#A5A5A5" /></FieldBox>
+            </Box>
             <Frame ref={FrameRef}></Frame>
         </Conatiner>
     );
