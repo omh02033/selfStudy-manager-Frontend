@@ -1,5 +1,5 @@
 import { io as socketio } from "socket.io-client";
-import "./env";
+import * as CONF from "./env";
 
-const io = socketio(process.env.API_SERVER as string);
+const io = socketio(CONF.API_SERVER);
 export default io;
