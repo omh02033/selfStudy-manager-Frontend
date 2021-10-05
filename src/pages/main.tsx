@@ -24,15 +24,6 @@ const Button = styled.button`
     transition: all 0.3s ease;
     position: relative;
 `;
-const RegisterBtn = styled(Button)`
-    background: linear-gradient(255deg, #2196f3, #ff4efd);
-`;
-const OutingBtn = styled(Button)`
-    background: linear-gradient(255deg, #03fc35, #ad03fc);
-`;
-const StatusBtn = styled(Button)`
-    background: linear-gradient(255deg, #c2fc03, #fc8003);
-`;
 
 const Frame = styled.iframe`
     position: absolute;
