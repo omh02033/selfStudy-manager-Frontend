@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import Btn from "../components/Btn";
 import EtcBtn from "../components/EtcBtn";
 
-import "../api/env";
+import * as CONF from "../api/env";
 
 const Container = styled.div`
     overflow: hidden;
@@ -49,6 +49,8 @@ const Outing: React.FC = () => {
         window.addEventListener("message", (e) => {
             console.log(e);
         });
+        console.log(process.env.API_SERVER);
+        console.log(__dirname,'.env');
     }, []);
 
     const options = [
@@ -84,7 +86,7 @@ const Outing: React.FC = () => {
 
     const redirect = (e: any) => {
         e.target.disabled = true;
-        FrameRef.current!.src = `${process.env.API_SERVER}/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
+        FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
     }
     const etcStatus = (e: any) => {
         e.target.disabled = true;
@@ -93,9 +95,9 @@ const Outing: React.FC = () => {
     const etcChange = (e: any) => {
         if(e.value === 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
-            FrameRef.current!.src = `${process.env.API_SERVER}/get_uid?status=o&field=etc&reason=${reason}&class=16`;
+            FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=etc&reason=${reason}&class=16`;
         } else {
-            FrameRef.current!.src = `${process.env.API_SERVER}/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
+            FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
         }
         setIsSelect(true);
         setEtc(false);
@@ -103,7 +105,7 @@ const Outing: React.FC = () => {
     }
     const comeback = (e: any) => {
         e.target.disabled = true;
-        FrameRef.current!.src = "${process.env.API_SERVER}/get_uid?status=c&class=16";
+        FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=c&class=16`;
     }
 
     return (

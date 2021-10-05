@@ -6,7 +6,7 @@ import Btn from "../components/Btn";
 import Loading from "../stylesheets/images/loading.gif";
 import dimiback from "../stylesheets/images/dimiback.svg";
 
-import "../api/env";
+import * as CONF from "../api/env";
 
 const Container = styled.div`
     width: 100%;
@@ -67,7 +67,7 @@ const Register: React.FC = () => {
 
     const redirect = (e:any) => {
         console.log(e.target);
-        FrameRef.current!.src = `${process.env.API_SERVER}/get_uid?status=r&sid=${e.target.dataset.serial}&number=${e.target.dataset.number}`;
+        FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=r&sid=${e.target.dataset.serial}&number=${e.target.dataset.number}`;
     }
 
     return (
