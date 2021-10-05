@@ -1,6 +1,6 @@
 // import React , {Component, useState, useEffect}from 'react';
 import { Route, Switch } from 'react-router-dom';
-import {Main, Register, Out, Status} from './pages';
+import {Main, Register, Out, Status, Uuid} from './pages';
 import './App.css';
 
 export default () => {
@@ -10,6 +10,7 @@ export default () => {
       <Route path='/register' exact={true} component={Register}/>
       <Route path='/outing' exact={true} component={Out}/>
       <Route path='/status/:roomid' exact={true} component={Status}/>
+      <Route path='/uuid' exact={true} component={Uuid}/>
     </Switch>
   );
 }
