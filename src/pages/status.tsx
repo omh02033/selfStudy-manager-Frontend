@@ -2,7 +2,94 @@ import React, { useEffect, useState, useCallback } from "react";
 import io from '../api/socket';
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import styled from "@emotion/styled";
 
+import dimiback from "../stylesheets/images/dimiback.svg";
+
+const Container = styled.div`
+    width: 100vw;
+    height: 100vh;
+    background: #262626;
+    color: white;
+`;
+const DimiBackground = styled.img`
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.15;
+`;
+
+const Box = styled.div`
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    position; relative;
+    display: flex;
+`;
+
+const MemberNumContainer = styled.div`
+    height: 100%;
+    width: 20%;
+`;
+const MemberNumBox = styled.div`
+    height: 100%;
+    width: 100%;
+    background: rgba(91, 91, 91, 0.5);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+`;
+    
+const MemberTitleNumBox = styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+`;
+const MemberTitle = styled.span`
+    font: 45px/65px Apple SD Gothic Neo B;
+`;
+const MemberNum = styled.span`
+    font: 35px/65px Apple SD Gothic Neo M;
+`;
+    
+const StatusContainer = styled.div`
+    width: 80%;
+    height: 100%;
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+`;
+const WbContainer = styled.div`
+    width: 100%;
+    height: 49%;
+    background: rgba(91, 91, 91, 0.5);
+`;
+const EtcContainer = styled.div`
+    width: 100%;
+    height: 49%;
+    background: rgba(91, 91, 91, 0.5);
+`;
+
+const OutTitle = styled.div`
+    width: 100%;
+    padding: 5px;
+    font: 40px/65px Apple SD Gothic Neo B;
+    text-align: center;
+    margin-bottom: 10px;
+`;
+
+const MemberBox = styled.div`
+    width: 100%;
+    font: 30px/65px Apple SD Gothic Neo M;
+`;
+const Member = styled.span`
+    margin-right: 7px;
+`;
+
+    
 type param = {
     roomid: string
 };
@@ -21,16 +108,33 @@ interface comeback {
     serial: string
 }
 
+
+const Mbox = ({title, pers}:any) => {
+    return (
+        <MemberTitleNumBox>
+            <MemberTitle>{title}</MemberTitle>
+            <MemberNum>{pers}</MemberNum>
+        </MemberTitleNumBox>
+    )
+}
+
 const Status: React.FC = () => {
     const [totalOutMember, setTotalOutMember] = useState<out[] | []>([]);
 
     const [outMember, setOutMember] = useState<out[] | []>([]);
     const [etcMember, setEtcMember] = useState<out[] | []>([]);
 
+    const [totalNum, setTotalNum] = useState(0);
+    const [currentNum, setCurrentNum] = useState(0);
+    const [absentNum, setAbsentNum] = useState(0);
+
     const { roomid } =  useParams<param>();
 
     const addOutUser = useCallback((data:out) => {
+        if(data.reason === '결석') setAbsentNum((prevNum) => {return prevNum+1;});
         setTotalOutMember((prevList) => {
+            const idx = prevList.findIndex((item) => {return item.serial === data.serial});
+            if(idx > -1) prevList.splice(idx, 1);
             return [
                 ...prevList,
                 {
@@ -41,21 +145,14 @@ const Status: React.FC = () => {
         });
     }, []);
     const removeOutUser = useCallback((data:comeback) => {
-        console.log(totalOutMember);
-        const idx = totalOutMember.findIndex((item) => {return item.serial === data.serial});
-        totalOutMember.splice(idx, 1);
-        console.log(totalOutMember);
         setTotalOutMember((prevList) => {
             const pa = prevList;
             const idx = pa.findIndex((item) => {return item.serial === data.serial});
+            if(prevList[idx].reason === '결석') setAbsentNum((prevNum) => {return prevNum-1;});
             pa.splice(idx, 1);
             return [...pa];
         });
-        if(totalOutMember.length === 0) {
-            setOutMember([]);
-            setEtcMember([]);
-        }
-    }, [totalOutMember]);
+    }, []);
 
     useEffect(() => {
         axios.post('/api/outing', {classNum: roomid})
@@ -63,6 +160,8 @@ const Status: React.FC = () => {
             for(let i=0; i<data.data['users'].length; i++) {
                 data.data['users'][i]['id'] = i;
             }
+            setTotalNum(data.data['totalNum']);
+            setCurrentNum(data.data['totalNum'] - data.data['users'].length);
             setTotalOutMember(data.data['users']);
         });
         io.emit('class', roomid);   // 소켓 연결
@@ -71,6 +170,9 @@ const Status: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        setCurrentNum(totalNum-totalOutMember.length);
+        setOutMember([]);
+        setEtcMember([]);
         for(let i of totalOutMember) {
             if(i.fields === 'wb') {
                 setOutMember((prevList) => {
@@ -88,20 +190,39 @@ const Status: React.FC = () => {
                 });
             }
         }
-    }, [totalOutMember]);
+    }, [totalOutMember, totalNum]);
 
     return (
-        <div>
-            <h1>status</h1>
-            <h2>물, 화장실</h2>
-            {outMember.map((data) => {
-                return <span key={data.id}>{data.name}</span>
-            })}
-            <h2>기타</h2>
-            {etcMember.map((data) => {
-                return data.name ? <span key={data.id}>{data.name} ({data.reason})</span> : '';
-            })}
-        </div>
+        <Container>
+            <Box>
+                <MemberNumContainer>
+                    <MemberNumBox>
+                        <Mbox title="총원" pers={totalNum} />
+                        <Mbox title="현원" pers={currentNum} />
+                        <Mbox title="결원" pers={absentNum} />
+                    </MemberNumBox>
+                </MemberNumContainer>
+                <StatusContainer>
+                    <WbContainer>
+                        <OutTitle>물, 화장실</OutTitle>
+                        <MemberBox>
+                            {outMember.map((data) => {
+                                return <Member key={data.id}>{data.name}</Member>
+                            })}
+                        </MemberBox>
+                    </WbContainer>
+                    <EtcContainer>
+                        <OutTitle>기타</OutTitle>
+                        <MemberBox>
+                            {etcMember.map((data) => {
+                                return data.name ? <Member key={data.id}>{data.name} ({data.reason})</Member> : '';
+                            })}
+                        </MemberBox>
+                    </EtcContainer>
+                </StatusContainer>
+            </Box>
+            <DimiBackground src={dimiback} />
+        </Container>
     );
 }
 
