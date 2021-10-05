@@ -49,8 +49,6 @@ const Outing: React.FC = () => {
         window.addEventListener("message", (e) => {
             console.log(e);
         });
-        console.log(process.env.API_SERVER);
-        console.log(__dirname,'.env');
     }, []);
 
     const options = [
