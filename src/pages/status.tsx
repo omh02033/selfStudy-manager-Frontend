@@ -83,10 +83,12 @@ const OutTitle = styled.div`
 
 const MemberBox = styled.div`
     width: 100%;
-    font: 30px/65px Apple SD Gothic Neo M;
+    font: 35px/65px Apple SD Gothic Neo M;
+    padding: 10px 20px;
+    word-break: break-all;
 `;
 const Member = styled.span`
-    margin-right: 7px;
+    padding: 15px;
 `;
 
     
@@ -97,7 +99,7 @@ type param = {
 interface out {
     classNum: string
     serial: string
-    name: string
+    number: string
     fields: string
     reason: string
     status?: string
@@ -207,7 +209,7 @@ const Status: React.FC = () => {
                         <OutTitle>물, 화장실</OutTitle>
                         <MemberBox>
                             {outMember.map((data) => {
-                                return <Member key={data.id}>{data.name}</Member>
+                                return <Member key={data.id}>{data.number}</Member>
                             })}
                         </MemberBox>
                     </WbContainer>
@@ -215,7 +217,7 @@ const Status: React.FC = () => {
                         <OutTitle>기타</OutTitle>
                         <MemberBox>
                             {etcMember.map((data) => {
-                                return data.name ? <Member key={data.id}>{data.name} ({data.reason})</Member> : '';
+                                return data.number ? <Member key={data.id}>{data.number} ({data.reason})</Member> : '';
                             })}
                         </MemberBox>
                     </EtcContainer>

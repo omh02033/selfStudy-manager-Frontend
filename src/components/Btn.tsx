@@ -56,7 +56,7 @@ const Btn = (prop: any) => {
         <Button style={isComplete ? BtnComplete : (isActive ? BtnActive : {
             background: prop.borderColor,
             border: `2px solid ${prop.borderColor}`
-        })} id={prop.id} onClick={btnStart} ref={dis}>
+        })} id={prop.id} onClick={btnStart} ref={dis} data-serial={prop['data-serial']} data-number={prop['data-number']}>
             <LAC style={isActive ? {opacity: 1} : {}} src={isActive ? CheckGif : ''}/>
             {prop.msg}
         </Button>

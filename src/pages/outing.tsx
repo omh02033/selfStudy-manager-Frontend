@@ -46,7 +46,7 @@ const Outing: React.FC = () => {
     useEffect(() => {
         window.addEventListener("message", (e) => {
             console.log(e);
-        })
+        });
     }, []);
 
     const options = [
@@ -77,7 +77,7 @@ const Outing: React.FC = () => {
         { value: '', label: '학생회 회의실' },
         { value: '', label: '학습멘토실' },
         { value: '', label: '휴머노이드 연구소' },
-        { value: 'etc', label: '기타' },
+        { value: 'etc', label: '직접 입력' },
     ];
 
     const redirect = (e: any) => {
