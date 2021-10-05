@@ -109,9 +109,9 @@ const Outing: React.FC = () => {
     return (
         <Container>
             <BtnContainer>
-                <FieldBox onClick={redirect}><Btn type="button" borderColor="#3BCD94" id="wb" msg="물,화장실" /></FieldBox>
-                <FieldBox onClick={etcStatus}><EtcBtn type="button" borderColor="#3BCD94" id="etc" isSelect={isSelect} msg="기타" /></FieldBox>
-                <FieldBox onClick={comeback}><Btn type="button" borderColor="#A5A5A5" id="comeback" msg="복귀" /></FieldBox>
+                <FieldBox onClick={redirect}><Btn borderColor="#3BCD94" id="wb" msg="물,화장실" /></FieldBox>
+                <FieldBox onClick={etcStatus}><EtcBtn borderColor="#3BCD94" id="etc" isSelect={isSelect} msg="기타" /></FieldBox>
+                <FieldBox onClick={comeback}><Btn borderColor="#A5A5A5" id="comeback" msg="복귀" /></FieldBox>
                 {etc ? (
                     <EtcSelect options={options} onChange={etcChange} />
                 ) : ('')}
