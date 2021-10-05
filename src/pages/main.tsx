@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 
 import Btn from "../components/Btn";
 
+import "../api/env";
+
 const Conatiner = styled.div`
     width: 100vw;
     height: 100vh;
@@ -54,7 +56,7 @@ const Main: React.FC = () => {
     }, []);
 
     const comeback = () => {
-        FrameRef.current!.src = "http://localhost:3001/get_uid?status=c&class=16";
+        FrameRef.current!.src = `${process.env.API_SERVER}/get_uid?status=c&class=16`;
     }
 
     return (
