@@ -117,9 +117,9 @@ const Login: React.FC = () => {
     }, []);
 
     const loginSubmit = (e: any) => {
-        setIsLoading(true);
         e.preventDefault();
         if(!username || !password) return;
+        setIsLoading(true);
         setCookie('userid', username);
         axios.post('/api/login', {
             'uid': username,
