@@ -130,10 +130,13 @@ const Status: React.FC = () => {
     const [currentNum, setCurrentNum] = useState(0);
     const [absentNum, setAbsentNum] = useState(0);
 
-    const { roomid } =  useParams<param>();
+    const { roomid } = useParams<param>();
 
     const addOutUser = useCallback((data:out) => {
-        if(data.reason === '결석') setAbsentNum((prevNum) => {return prevNum+1;});
+        if(data.fields === 'etc') {
+            setAbsentNum((prevNum) => {return prevNum+1;});
+            setCurrentNum((prevNum) => {return prevNum-1;});
+        };
         setTotalOutMember((prevList) => {
             const idx = prevList.findIndex((item) => {return item.serial === data.serial});
             if(idx > -1) prevList.splice(idx, 1);
@@ -150,7 +153,10 @@ const Status: React.FC = () => {
         setTotalOutMember((prevList) => {
             const pa = prevList;
             const idx = pa.findIndex((item) => {return item.serial === data.serial});
-            if(prevList[idx].reason === '결석') setAbsentNum((prevNum) => {return prevNum-1;});
+            if(prevList[idx].fields === 'etc') {
+                setAbsentNum((prevNum) => {return prevNum-1;});
+                setCurrentNum((prevNum) => {return prevNum+1;});
+            };
             pa.splice(idx, 1);
             return [...pa];
         });
