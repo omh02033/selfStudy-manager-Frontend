@@ -102,17 +102,21 @@ const Outing: React.FC = () => {
     const etcChange = (e: any) => {
         if(e.value === 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
-            axios.post('/api/outing', {
-                field: 'etc',
-                reason
-            })
-            .then((data:any) => {
-                io.emit("outing", data.data.socketData);
-            })
-            .catch(err => {
-                if(err.response.data.msg) alert(err.response.data.msg);
-                console.log(err);
-            });
+            if(reason) {
+                if(reason.length < 16) {
+                    axios.post('/api/outing', {
+                        field: 'etc',
+                        reason
+                    })
+                    .then((data:any) => {
+                        io.emit("outing", data.data.socketData);
+                    })
+                    .catch(err => {
+                        if(err.response.data.msg) alert(err.response.data.msg);
+                        console.log(err);
+                    });
+                } else alert("사유는 15글자 이하로 적어주세요");
+            }
         } else {
             axios.post('/api/outing', {
                 field: 'etc',
