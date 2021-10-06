@@ -4,8 +4,6 @@ import {getCookie} from '../components/cookie';
 
 import Btn from "../components/Btn";
 
-import * as CONF from "../api/env";
-
 const Conatiner = styled.div`
     width: 100vw;
     height: 100vh;
@@ -20,14 +18,6 @@ const Box = styled.div`
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
-`;
-
-const Frame = styled.iframe`
-    position: absolute;
-    visibility: hidden;
-    left: 0;
-    transform: translateX(-100%);
-    opacity: 0;
 `;
 
 const FieldBox = styled.div`

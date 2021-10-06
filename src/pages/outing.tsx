@@ -3,11 +3,8 @@ import Select from 'react-select';
 import styled from "@emotion/styled";
 import Btn from "../components/Btn";
 import EtcBtn from "../components/EtcBtn";
-import { getCookie } from "../components/cookie";
 import axios from "axios";
 import io from '../api/socket';
-
-import * as CONF from "../api/env";
 
 const Container = styled.div`
     overflow: hidden;
