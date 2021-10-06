@@ -21,6 +21,7 @@ export default () => {
   return (
     <Switch>
       <Route path='/' exact={true} component={Main}/>
+      <Route path='/status/:roomid' exact={true} component={Status}/>
       {
         isLogin ? (
           <Switch>
@@ -34,7 +35,6 @@ export default () => {
           </Switch>
         )
       }
-      <Route path='/status/:roomid' exact={true} component={Status}/>
     </Switch>
   );
 }
