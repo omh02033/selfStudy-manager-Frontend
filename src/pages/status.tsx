@@ -133,13 +133,15 @@ const Status: React.FC = () => {
     const { roomid } = useParams<param>();
 
     const addOutUser = useCallback((data:out) => {
-        if(data.fields === 'etc') {
-            setAbsentNum((prevNum) => {return prevNum+1;});
-            setCurrentNum((prevNum) => {return prevNum-1;});
-        };
         setTotalOutMember((prevList) => {
             const idx = prevList.findIndex((item) => {return item.serial === data.serial});
             if(idx > -1) prevList.splice(idx, 1);
+            else {
+                if(data.fields === 'etc') {
+                    setAbsentNum((prevNum) => {return prevNum+1;});
+                    setCurrentNum((prevNum) => {return prevNum-1;});
+                };
+            }
             return [
                 ...prevList,
                 {
@@ -171,7 +173,10 @@ const Status: React.FC = () => {
             setTotalNum(data.data['totalNum']);
             setCurrentNum(data.data['totalNum'] - data.data['etcNum']);
             setAbsentNum(data.data['etcNum']);
-            setTotalOutMember(data.data['users']);
+            let total = [];
+            for(let i of data.data['users']) total.push(i);
+            for(let i of data.data['etcManage']) total.push(i)
+            setTotalOutMember(total);
         });
         io.emit('class', roomid);   // 소켓 연결
         io.on('userOut', addOutUser);

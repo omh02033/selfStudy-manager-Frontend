@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import {getCookie, setCookie} from '../components/cookie';
@@ -108,22 +108,21 @@ const NowLoading = {
 
 const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
-
-    const uidRef = useRef<HTMLInputElement>(null);
-    const upwRef = useRef<HTMLInputElement>(null);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     useEffect(() => {
         const uid = getCookie('userid');
-        if(uid) { uidRef.current!.value = uid; }
+        if(uid) { setUsername(uid); }
     }, []);
 
     const loginSubmit = (e: any) => {
         setIsLoading(true);
         e.preventDefault();
-        setCookie('userid', uidRef.current!.value);
+        setCookie('userid', username);
         axios.post('/api/login', {
-            'uid': uidRef.current!.value,
-            'pwd': upwRef.current!.value
+            'uid': username,
+            'pwd': password
         })
         .then((data:any) => {
             setIsLoading(false);
@@ -142,8 +141,8 @@ const Login: React.FC = () => {
         <Container>
             <Title><DimiTitle>디미고인</DimiTitle> <SubTitle>로그인</SubTitle></Title>
             <Form action="/api/login" onSubmit={loginSubmit}>
-                <Input type="text" placeholder="아이디" ref={uidRef} />
-                <Input type="password" placeholder="비밀번호" ref={upwRef} />
+                <Input type="text" placeholder="아이디" onChange={e => setUsername(e.target.value)} value={username} />
+                <Input type="password" placeholder="비밀번호" onChange={e => setPassword(e.target.value)} value={password} />
                 <SubBtn type="submit" value="로그인" />
             </Form>
             <LoadingBox style={isLoading ? NowLoading : NotLoading}>
