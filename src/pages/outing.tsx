@@ -149,7 +149,7 @@ const Outing: React.FC = () => {
                 <FieldBox onClick={etcStatus}><EtcBtn borderColor="#3BCD94" id="etc" isSelect={isSelect} msg="기타" /></FieldBox>
                 <FieldBox onClick={comeback}><Btn borderColor="#A5A5A5" id="comeback" msg="복귀" /></FieldBox>
                 {etc ? (
-                    <EtcSelect options={options} onChange={etcChange} />
+                    <EtcSelect options={options} onChange={etcChange} isSearchable={false} />
                 ) : ('')}
             </BtnContainer>
         </Container>
