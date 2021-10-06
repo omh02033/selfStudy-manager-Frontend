@@ -69,7 +69,10 @@ const Manager: React.FC = () => {
 
     const etcSubmit = (e: any) => {
         e.preventDefault();
-        if(!number || !reason) alert("필드를 확인해주세요");
+        if(!number || !reason) {
+            alert("필드를 확인해주세요");
+            return;
+        }
         axios.post('/api/etcManage', {
             number: number,
             reason: reason
