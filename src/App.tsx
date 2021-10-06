@@ -12,11 +12,12 @@ export default () => {
     .then(() => {
       setIsLogin(true);
     })
-    .catch((err) => {
-      if(err.response.data.delCookie) {
+    .catch(e => {
+      console.log(e);
+      if(e.response.data.delCookie) {
         removeCookie('token');
       }
-    })
+    });
   }, []);
   return (
     <Switch>

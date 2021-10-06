@@ -11,7 +11,7 @@ const Conatiner = styled.div`
     justify-content: center;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
     width: 90%;
     height: 37%;
     display: flex;
@@ -36,8 +36,13 @@ const Input = styled.input`
     font-family: Apple SD Gothic Neo L;
     caret-color: magenta;
 `;
-const SubBtn = styled.input`
+const BtnBox = styled.div`
     width: 80%;
+    display: flex;
+    justify-content: space-between;
+`;
+const SubBtn = styled.input`
+    width: 40%;
     padding: 10px;
     outline: none;
     border: none;
@@ -67,15 +72,14 @@ const Manager: React.FC = () => {
         });
     }, []);
 
-    const etcSubmit = (e: any) => {
-        e.preventDefault();
+    const etcSubmit = () => {
         if(!number || !reason) {
             alert("필드를 확인해주세요");
             return;
         }
         axios.post('/api/etcManage', {
-            number: number,
-            reason: reason
+            number,
+            reason
         })
         .then((data: any) => {
             io.emit('outing', data.data.socketData);
@@ -87,13 +91,34 @@ const Manager: React.FC = () => {
             alert("에러가 발생하였습니다.");
         });
     }
+    const backSubmit = () => {
+        if(!number) {
+            alert("필드를 확인해주세요");
+            return;
+        }
+        axios.post('/api/etcComeback', {
+            number,
+        })
+        .then((data: any) => {
+            io.emit('comeback', data.data.socketData);
+            setNumber("");
+            setReason("");
+        })
+        .catch(err => {
+            console.log(err);
+            alert("에러가 발생하였습니다.");
+        });
+    }
 
     return (
         <Conatiner>
-            <Form action="/api/etcManage" onSubmit={etcSubmit}>
+            <Form>
                 <Input type="text" placeholder="번호" onChange={e => setNumber(e.target.value)} value={number} />
                 <Input type="text" placeholder="사유" onChange={e => setReason(e.target.value)} value={reason} />
-                <SubBtn type="submit" value="추가" />
+                <BtnBox>
+                    <SubBtn type="button" onClick={etcSubmit} value="추가" />
+                    <SubBtn type="button" onClick={backSubmit} value="복귀" />
+                </BtnBox>
             </Form>
         </Conatiner>
     );
