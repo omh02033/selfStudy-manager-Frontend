@@ -179,7 +179,6 @@ const Status: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        setCurrentNum(totalNum-totalOutMember.length);
         setOutMember([]);
         setEtcMember([]);
         for(let i of totalOutMember) {
