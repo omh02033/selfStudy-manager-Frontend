@@ -5,6 +5,7 @@ import axios from "axios";
 import styled from "@emotion/styled";
 
 import dimiback from "../stylesheets/images/dimiback.svg";
+import qrCode from "../stylesheets/images/rselfstudy.png";
 
 const Container = styled.div`
     width: 100vw;
@@ -89,6 +90,12 @@ const MemberBox = styled.div`
 `;
 const Member = styled.span`
     padding: 15px;
+`;
+const QR = styled.img`
+    width: 100px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 `;
 
     
@@ -235,6 +242,7 @@ const Status: React.FC = () => {
                 </StatusContainer>
             </Box>
             <DimiBackground src={dimiback} />
+            <QR src={qrCode} />
         </Container>
     );
 }
