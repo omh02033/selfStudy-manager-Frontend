@@ -44,6 +44,7 @@ const Main: React.FC = () => {
                 ) : (
                     <Box>
                         <FieldBox onClick={() => {window.location.href="/login"}}><Btn msg="로그인" borderColor="#18C2BA" /></FieldBox>
+                        <FieldBox onClick={() => {window.location.href="/status/16"}}><Btn msg="현황보기" borderColor="#A5A5A5" /></FieldBox>
                     </Box>
                 )
             }
