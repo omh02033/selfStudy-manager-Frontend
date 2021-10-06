@@ -169,7 +169,8 @@ const Status: React.FC = () => {
                 data.data['users'][i]['id'] = i;
             }
             setTotalNum(data.data['totalNum']);
-            setCurrentNum(data.data['totalNum'] - data.data['users'].length);
+            setCurrentNum(data.data['totalNum'] - data.data['etcNum']);
+            setAbsentNum(data.data['etcNum']);
             setTotalOutMember(data.data['users']);
         });
         io.emit('class', roomid);   // 소켓 연결
