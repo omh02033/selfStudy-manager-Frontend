@@ -157,7 +157,7 @@ const Status: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        axios.post('/api/outing', {classNum: roomid})
+        axios.post('/api/prevOuting', {classNum: roomid})
         .then((data:any) => {
             for(let i=0; i<data.data['users'].length; i++) {
                 data.data['users'][i]['id'] = i;

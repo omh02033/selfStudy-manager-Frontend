@@ -3,6 +3,9 @@ import Select from 'react-select';
 import styled from "@emotion/styled";
 import Btn from "../components/Btn";
 import EtcBtn from "../components/EtcBtn";
+import { getCookie } from "../components/cookie";
+import axios from "axios";
+import io from '../api/socket';
 
 import * as CONF from "../api/env";
 
@@ -24,13 +27,6 @@ const BtnContainer = styled.div`
     flex-direction: column;
 `;
 
-const Frame = styled.iframe`
-    position: absolute;
-    visibility: hidden;
-    left: 0;
-    transform: translateX(-100%);
-`;
-
 const FieldBox = styled.div`
     width: 75%;
 `;
@@ -43,11 +39,17 @@ const Outing: React.FC = () => {
     const [etc, setEtc] = useState(false);
     const [isSelect, setIsSelect] = useState(false);
     
-    const FrameRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
-        window.addEventListener("message", (e) => {
-            console.log(e);
+        axios.post('/api/getClassNum')
+        .then((data:any) => {
+            io.emit('class', data.data.classNum);
+        }).catch(err => {
+            if(err.response.data.msg) {
+                alert(err.response.data.msg);
+            } else {
+                console.log(err);
+            }
         });
     }, []);
 
@@ -82,9 +84,19 @@ const Outing: React.FC = () => {
         { value: 'etc', label: '직접 입력' },
     ];
 
-    const redirect = (e: any) => {
+    const WbOut = (e: any) => {
         e.target.disabled = true;
-        FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=${e.target.id}&reason=none&class=16`;
+        axios.post('/api/outing', {
+            field: 'wb',
+            reason: 'none'
+        })
+        .then((data:any) => {
+            io.emit("outing", data.data.socketData);
+        })
+        .catch(err => {
+            if(err.response.data.msg) alert(err.response.data.msg);
+            console.log(err);
+        });
     }
     const etcStatus = (e: any) => {
         e.target.disabled = true;
@@ -93,9 +105,29 @@ const Outing: React.FC = () => {
     const etcChange = (e: any) => {
         if(e.value === 'etc') {
             const reason = prompt("사유를 입력하세요.", "직접입력");
-            FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=etc&reason=${reason}&class=16`;
+            axios.post('/api/outing', {
+                field: 'etc',
+                reason
+            })
+            .then((data:any) => {
+                io.emit("outing", data.data.socketData);
+            })
+            .catch(err => {
+                if(err.response.data.msg) alert(err.response.data.msg);
+                console.log(err);
+            });
         } else {
-            FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=o&field=etc&reason=${e.label}&class=16`;
+            axios.post('/api/outing', {
+                field: 'etc',
+                reason: e.label
+            })
+            .then((data:any) => {
+                io.emit("outing", data.data.socketData);
+            })
+            .catch(err => {
+                if(err.response.data.msg) alert(err.response.data.msg);
+                console.log(err);
+            });
         }
         setIsSelect(true);
         setEtc(false);
@@ -103,20 +135,26 @@ const Outing: React.FC = () => {
     }
     const comeback = (e: any) => {
         e.target.disabled = true;
-        FrameRef.current!.src = `${CONF.API_SERVER}/get_uid?status=c&class=16`;
+        axios.post('/api/comeback')
+        .then((data:any) => {
+            io.emit("comeback", data.data.socketData);
+        })
+        .catch(err => {
+            if(err.response.data.msg) alert(err.response.data.msg);
+            console.log(err);
+        });
     }
 
     return (
         <Container>
             <BtnContainer>
-                <FieldBox onClick={redirect}><Btn borderColor="#3BCD94" id="wb" msg="물,화장실" /></FieldBox>
+                <FieldBox onClick={WbOut}><Btn borderColor="#3BCD94" id="wb" msg="물,화장실" /></FieldBox>
                 <FieldBox onClick={etcStatus}><EtcBtn borderColor="#3BCD94" id="etc" isSelect={isSelect} msg="기타" /></FieldBox>
                 <FieldBox onClick={comeback}><Btn borderColor="#A5A5A5" id="comeback" msg="복귀" /></FieldBox>
                 {etc ? (
                     <EtcSelect options={options} onChange={etcChange} />
                 ) : ('')}
             </BtnContainer>
-            <Frame frameBorder="no" width="100" height="100" ref={FrameRef}></Frame>
         </Container>
     );
 }
