@@ -142,16 +142,16 @@ const Status: React.FC = () => {
     const addOutUser = useCallback((data:out) => {
         setTotalOutMember((prevList) => {
             const idx = prevList.findIndex((item) => {return item.serial === data.serial});
-            if(prevList[idx].fields === 'etc') {
-                setAbsentNum((prevNum) => {return prevNum+1;});
-                setCurrentNum((prevNum) => {return prevNum-1;});
+            if(prevList[idx]) {
+                if(prevList[idx].fields === 'etc') {
+                    setAbsentNum((prevNum) => {return prevNum-1;});
+                    setCurrentNum((prevNum) => {return prevNum+1;});
+                }
             }
             if(idx > -1) prevList.splice(idx, 1);
-            else {
-                if(data.fields === 'etc') {
-                    setAbsentNum((prevNum) => {return prevNum+1;});
-                    setCurrentNum((prevNum) => {return prevNum-1;});
-                };
+            if(data.fields === 'etc') {
+                setAbsentNum((prevNum) => {return prevNum+1;});
+                setCurrentNum((prevNum) => {return prevNum-1;});
             }
             return [
                 ...prevList,
