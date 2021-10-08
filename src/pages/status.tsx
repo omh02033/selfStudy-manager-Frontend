@@ -118,7 +118,7 @@ interface comeback {
 interface etc {
     reason: string
     members: string[]
-    id?: string;
+    id?: number
 }
 
 
@@ -205,9 +205,13 @@ const Status: React.FC = () => {
         for(let i of totalOutMember) {
             if(i.fields === 'wb') {
                 setOutMember((prevList) => {
+                    const s = [...prevList, i];
+                    s.sort((a, b) => {
+                        return Number(a.number) - Number(b.number);
+                    });
+
                     return [
-                        ...prevList,
-                        i
+                        ...s
                     ];
                 });
             } else {
@@ -215,16 +219,21 @@ const Status: React.FC = () => {
                     for(let j in prevList) {
                         if(prevList[j].reason === i.reason) {
                             prevList[j].members.push(i.number);
+                            prevList[j].members.sort((a, b) => {
+                                return Number(a) - Number(b);
+                            });
                             return [
                                 ...prevList
                             ];
                         }
                     }
+
                     return [
                         ...prevList,
                         {
                             reason: i.reason,
-                            members: [i.number]
+                            members: [i.number],
+                            id: i.id
                         }
                     ];
                 });
