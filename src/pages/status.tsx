@@ -30,7 +30,7 @@ const Box = styled.div`
 
 const MemberNumContainer = styled.div`
     height: 100%;
-    width: 20%;
+    width: 10%;
 `;
 const MemberNumBox = styled.div`
     height: 100%;
@@ -56,7 +56,7 @@ const MemberNum = styled.span`
 `;
     
 const StatusContainer = styled.div`
-    width: 80%;
+    width: 90%;
     height: 100%;
     padding-left: 20px;
     display: flex;
@@ -65,12 +65,12 @@ const StatusContainer = styled.div`
 `;
 const WbContainer = styled.div`
     width: 100%;
-    height: 49%;
+    height: 39%;
     background: rgba(91, 91, 91, 0.5);
 `;
 const EtcContainer = styled.div`
     width: 100%;
-    height: 49%;
+    height: 59%;
     background: rgba(91, 91, 91, 0.5);
 `;
 
@@ -79,7 +79,6 @@ const OutTitle = styled.div`
     padding: 5px;
     font: 40px/65px Apple SD Gothic Neo B;
     text-align: center;
-    margin-bottom: 10px;
 `;
 
 const MemberBox = styled.div`
@@ -116,6 +115,11 @@ interface comeback {
     classNum: string
     serial: string
 }
+interface etc {
+    reason: string
+    members: string[]
+    id?: string;
+}
 
 
 const Mbox = ({title, pers}:any) => {
@@ -131,7 +135,8 @@ const Status: React.FC = () => {
     const [totalOutMember, setTotalOutMember] = useState<out[] | []>([]);
 
     const [outMember, setOutMember] = useState<out[] | []>([]);
-    const [etcMember, setEtcMember] = useState<out[] | []>([]);
+    const [etcMember, setEtcMember] = useState<etc[] | []>([]);
+
 
     const [totalNum, setTotalNum] = useState(0);
     const [currentNum, setCurrentNum] = useState(0);
@@ -207,9 +212,20 @@ const Status: React.FC = () => {
                 });
             } else {
                 setEtcMember((prevList) => {
+                    for(let j in prevList) {
+                        if(prevList[j].reason === i.reason) {
+                            prevList[j].members.push(i.number);
+                            return [
+                                ...prevList
+                            ];
+                        }
+                    }
                     return [
                         ...prevList,
-                        i
+                        {
+                            reason: i.reason,
+                            members: [i.number]
+                        }
                     ];
                 });
             }
@@ -239,7 +255,7 @@ const Status: React.FC = () => {
                         <OutTitle>기타</OutTitle>
                         <MemberBox>
                             {etcMember.map((data) => {
-                                return data.number ? <Member key={data.id}>{data.number} ({data.reason})</Member> : '';
+                                return data.members ? <Member key={data.id}>({data.reason}) [{data.members.join(', ')}]</Member> : '';
                             })}
                         </MemberBox>
                     </EtcContainer>
