@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import io from "../api/socket";

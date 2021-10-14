@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import {Main, Login, Out, Status, Manager} from './pages';
+import {Main, Login, Status, Manager} from './pages';
 import axios from 'axios';
 import { removeCookie } from './components/cookie';
 import './App.css';
@@ -27,13 +27,11 @@ export default () => {
         isLogin ? (
           <Switch>
             <Route path='/login' exact={true} component={Main}/>
-            <Route path='/outing' exact={true} component={Out}/>
             <Route path='/manager' exact={true} component={Manager}/>
           </Switch>
         ) : (
           <Switch>
             <Route path='/login' exact={true} component={Login}/>
-            <Route path='/outing' exact={true} component={Login}/>
             <Route path='/manager' exact={true} component={Login}/>
           </Switch>
         )
