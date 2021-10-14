@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import {getCookie} from '../components/cookie';
 import axios from "axios";
 import io from "../api/socket";
+import { removeCookie } from "../components/cookie";
 
 import Btn from "../components/Btn";
 import Popup from "../components/popup";
@@ -41,6 +42,20 @@ const StatusSpan = styled.div`
 const LocSpan = styled.span`
     color: #3BCD94;
     font: 26px/65px Apple SD Gothic Neo M;
+`;
+
+const LogoutBox = styled.button`
+    outline: none;
+    border: none;
+    background: #c2c2c2;
+    font: 13px/65px Apple SD Gothic Neo M;
+    color: #6e6e6e;
+    padding: 6px 8px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    line-height: 100%;
+    border-radius: 10px;
 `;
 
 const Main: React.FC = () => {
@@ -117,11 +132,20 @@ const Main: React.FC = () => {
         setPopupOn(false);
     }
 
+    
+    const logout = () => {
+        removeCookie('token');
+        window.location.href = window.location.href;
+    }
+
+
     return (
         <Conatiner>
-            <StatusSpan>
-                {name}님은 현재<br/><LocSpan>{loc}</LocSpan>에 있습니다
-            </StatusSpan>
+            {isLogin ? (
+                <StatusSpan>
+                    {name}님은 현재<br/><LocSpan>{loc}</LocSpan>에 있습니다
+                </StatusSpan>
+            ) : ('')}
             {
                 isLogin ? (
                     <Box>
@@ -141,6 +165,9 @@ const Main: React.FC = () => {
                 onClose={closeModal}
                 setNowLocation={setNowLocation}
             />
+            {isLogin ? (
+                <LogoutBox onClick={logout}>로그아웃</LogoutBox>
+            ) : ('')}
         </Conatiner>
     );
 }
