@@ -77,7 +77,7 @@ const Manager: React.FC = () => {
             alert("필드를 확인해주세요");
             return;
         }
-        if(reason.length < 6) {
+        if(reason.length > 5) {
             alert("사유는 5글자 이내로 해주세요");
             return;
         }
