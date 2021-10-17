@@ -82,7 +82,7 @@ const Manager: React.FC = () => {
             return;
         }
         axios.post('/api/etcManage', {
-            number,
+            number: number.padStart(2, '0'),
             reason
         })
         .then((data: any) => {
