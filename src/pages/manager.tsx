@@ -101,7 +101,7 @@ const Manager: React.FC = () => {
             return;
         }
         axios.post('/api/etcComeback', {
-            number,
+            number: number.padStart(2, '0'),
         })
         .then((data: any) => {
             io.emit('comeback', data.data.socketData);
