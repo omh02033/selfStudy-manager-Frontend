@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import axios from "axios";
+import api from "../api/api";
 import {getCookie, setCookie} from '../components/cookie';
 
 import LoadingGif from '../stylesheets/images/loading.gif';
@@ -121,13 +121,14 @@ const Login: React.FC = () => {
         if(!username || !password) return;
         setIsLoading(true);
         setCookie('userid', username);
-        axios.post('/api/login', {
+        api.post('/api/login', {
             'uid': username,
             'pwd': password
         })
         .then((data:any) => {
             setIsLoading(false);
-            setCookie('token', data.data.token);
+            // setCookie('token', data.data.token);
+            localStorage.setItem('token', data.data.token);
             window.location.href = '/';
         })
         .catch(e => {

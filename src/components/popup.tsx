@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Select from 'react-select';
 import styled from "@emotion/styled";
 import Btn from "../components/Btn";
 import EtcBtn from "../components/EtcBtn";
-import axios from "axios";
+import api from "../api/api";
 import io from '../api/socket';
 
 import closePng from '../stylesheets/images/close.png'
@@ -100,7 +100,7 @@ const Popup = ({popupOn, onClose, setNowLocation}: any) => {
     
 
     useEffect(() => {
-        axios.post('/api/getClassNum')
+        api.post('/api/getClassNum')
         .then((data:any) => {
             io.emit('class', data.data.classNum);
         }).catch(err => {
@@ -160,7 +160,7 @@ const Popup = ({popupOn, onClose, setNowLocation}: any) => {
 
     const WbOut = (e: any) => {
         e.target.disabled = true;
-        axios.post('/api/outing', {
+        api.post('/api/outing', {
             field: 'wb',
             reason: 'none'
         })
@@ -191,7 +191,7 @@ const Popup = ({popupOn, onClose, setNowLocation}: any) => {
             const reason = prompt("사유를 입력하세요. (5글자 이내)", "직접입력");
             if(reason) {
                 if(reason.length < 6) {
-                    axios.post('/api/outing', {
+                    api.post('/api/outing', {
                         field,
                         reason
                     })
@@ -206,7 +206,7 @@ const Popup = ({popupOn, onClose, setNowLocation}: any) => {
                 } else alert("사유는 5글자 이하로 적어주세요");
             }
         } else {
-            axios.post('/api/outing', {
+            api.post('/api/outing', {
                 field,
                 reason: e.label
             })

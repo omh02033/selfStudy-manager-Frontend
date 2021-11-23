@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "@emotion/styled";
-import axios from "axios";
+import api from "../api/api";
 import io from "../api/socket";
 
 const Conatiner = styled.div`
@@ -60,7 +60,7 @@ const Manager: React.FC = () => {
     const [reason, setReason] = useState("");
     
     useEffect(() => {
-        axios.post('/api/getClassNum')
+        api.post('/api/getClassNum')
         .then((data:any) => {
             io.emit('class', data.data.classNum);
         }).catch(err => {
@@ -81,7 +81,7 @@ const Manager: React.FC = () => {
             alert("사유는 5글자 이내로 해주세요");
             return;
         }
-        axios.post('/api/etcManage', {
+        api.post('/api/etcManage', {
             number: number.padStart(2, '0'),
             reason
         })
@@ -100,7 +100,7 @@ const Manager: React.FC = () => {
             alert("필드를 확인해주세요");
             return;
         }
-        axios.post('/api/etcComeback', {
+        api.post('/api/etcComeback', {
             number: number.padStart(2, '0'),
         })
         .then((data: any) => {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "@emotion/styled";
 import {getCookie} from '../components/cookie';
-import axios from "axios";
+import api from "../api/api";
 import io from "../api/socket";
 import { removeCookie } from "../components/cookie";
 
@@ -68,9 +68,9 @@ const Main: React.FC = () => {
 
 
     useEffect(() => {
-        const user = getCookie('token');
+        const user = localStorage.getItem('token');
         if(user) setIsLogin(true);
-        axios.post('/api/getClassNum')
+        api.post('/api/getClassNum')
         .then((data:any) => {
             io.emit('class', data.data.classNum);
         }).catch(err => {
@@ -81,7 +81,7 @@ const Main: React.FC = () => {
             }
         });
 
-        axios.post('/api/mySpot')
+        api.post('/api/mySpot')
         .then((data: any) => {
             setName(data.data['name']);
             setLoc(data.data['loc']);
@@ -95,7 +95,7 @@ const Main: React.FC = () => {
     }, []);
 
     const comeback = () => {
-        axios.post('/api/comeback')
+        api.post('/api/comeback')
         .then((data:any) => {
             io.emit("comeback", data.data.socketData);
             setLoc("교실");
@@ -135,6 +135,7 @@ const Main: React.FC = () => {
     
     const logout = () => {
         removeCookie('token');
+        localStorage.clear();
         window.location.href = window.location.href;
     }
 
